@@ -75,6 +75,7 @@ class PublicController extends Controller
                     'amenities',
                     'amenities.metadata',
                     'slugable',
+                    'hotel',
                     'activeBookingRooms' => function ($query) use ($startDate, $endDate) {
                         return $query
                             ->whereNot('status', BookingStatusEnum::CANCELLED)
@@ -151,6 +152,7 @@ class PublicController extends Controller
                 'amenities',
                 'currency',
                 'category',
+                'hotel',
                 'activeRoomDates' => function ($query) use ($startDate, $endDate) {
                     return $query
                         ->whereDate('start_date', '>=', $startDate)
@@ -200,6 +202,7 @@ class PublicController extends Controller
                 'with' => [
                     'amenities',
                     'slugable',
+                    'hotel',
                     'activeBookingRooms' => function ($query) use ($startDate, $endDate) {
                         return $query
                             ->whereNot('status', BookingStatusEnum::CANCELLED)

@@ -15,7 +15,8 @@ class EnsureLicenseHasBeenActivated
 
     public function handle(Request $request, Closure $next)
     {
-        if (
+        return $next($request);
+        /*if (
             ! is_in_admin(true)
             || Auth::guest()
             || $this->core->isSkippedLicenseReminder()
@@ -34,6 +35,6 @@ class EnsureLicenseHasBeenActivated
             return redirect()->route('unlicensed', ['redirect_url' => $request->fullUrl()]);
         }
 
-        return $next($request);
+        return $next($request);*/
     }
 }

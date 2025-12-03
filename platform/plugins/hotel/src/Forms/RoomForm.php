@@ -16,6 +16,7 @@ use Botble\Base\Forms\Fields\TextField;
 use Botble\Base\Forms\FormAbstract;
 use Botble\Hotel\Http\Requests\RoomRequest;
 use Botble\Hotel\Models\Amenity;
+use Botble\Hotel\Models\Hotel;
 use Botble\Hotel\Models\Room;
 use Botble\Hotel\Models\RoomCategory;
 use Botble\Hotel\Models\Tax;
@@ -34,6 +35,7 @@ class RoomForm extends FormAbstract
 
         $roomCategories = RoomCategory::query()->pluck('name', 'id')->all();
         $taxes = Tax::query()->pluck('title', 'id')->all();
+        $hotels = Hotel::query()->pluck('name', 'id')->all();
         $amenities = Amenity::query()->select(['name', 'id'])->get();
 
         $selectedAmenities = [];
@@ -182,6 +184,16 @@ class RoomForm extends FormAbstract
                     'class' => 'form-control select-full',
                 ],
                 'choices' => $taxes,
+            ])
+            ->add('hotel_id', 'customSelect', [
+                'label' => trans('plugins/hotel::room.form.hotel'),
+                'wrapper' => [
+                    'class' => $this->formHelper->getConfig('defaults.wrapper_class') . ' col-md-4',
+                ],
+                'attr' => [
+                    'class' => 'form-control select-full',
+                ],
+                'choices' => ['' => trans('plugins/hotel::room.form.select_hotel')] + $hotels,
             ])
             ->addMetaBoxes([
                 'amenities' => [

@@ -7,6 +7,7 @@ use Botble\Hotel\Models\Amenity;
 use Botble\Hotel\Models\Booking;
 use Botble\Hotel\Models\BookingAddress;
 use Botble\Hotel\Models\BookingRoom;
+use Botble\Hotel\Models\Hotel;
 use Botble\Hotel\Models\Room;
 use Botble\Hotel\Models\RoomCategory;
 use Botble\Slug\Facades\SlugHelper;
@@ -177,11 +178,20 @@ class RoomSeeder extends BaseSeeder
         DB::table('ht_booking_services')->truncate();
 
         $amenities = Amenity::query()->pluck('id')->all();
+        $hotels = Hotel::query()->pluck('id')->all();
         $faker = $this->fake();
-        foreach ($rooms as $room) {
+
+        foreach ($rooms as $index => $room) {
             $room['tax_id'] = 1;
             $room['is_featured'] = rand(0, 1);
             $room['content'] = File::get(database_path('seeders/contents/room-content.html'));
+
+            // Distribute rooms evenly across hotels (2 rooms per hotel)
+            if (!empty($hotels)) {
+                $hotelIndex = floor($index / 2) % count($hotels);
+                $room['hotel_id'] = $hotels[$hotelIndex];
+            }
+
             $room = Room::query()->create($room);
 
             if ($countAmenities = count($amenities)) {

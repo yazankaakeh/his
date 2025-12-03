@@ -31,6 +31,8 @@ return [
         'start_date' => 'Start date',
         'end_date' => 'End date',
         'tax' => 'Tax',
+        'hotel' => 'Hotel',
+        'select_hotel' => '-- Select Hotel --',
     ],
     'blocked' => 'Blocked',
     'full_book' => 'Full Book',

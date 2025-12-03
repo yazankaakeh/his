@@ -134,6 +134,10 @@ Route::group(['namespace' => 'Botble\Hotel\Http\Controllers', 'middleware' => ['
             Route::resource('', 'PlaceController')->parameters(['' => 'place']);
         });
 
+        Route::group(['prefix' => 'hotels', 'as' => 'hotel.'], function () {
+            Route::resource('', 'HotelController')->parameters(['' => 'hotel']);
+        });
+
         Route::group(['prefix' => 'taxes', 'as' => 'tax.'], function () {
             Route::resource('', 'TaxController')->parameters(['' => 'tax']);
         });

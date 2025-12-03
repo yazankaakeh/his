@@ -208,22 +208,29 @@ class HotelServiceProvider extends ServiceProvider
                     'route' => 'room.index',
                 ])
                 ->registerItem([
-                    'id' => 'cms-plugins-room',
+                    'id' => 'cms-plugins-hotels',
                     'priority' => 0,
+                    'parent_id' => 'cms-plugins-hotel',
+                    'name' => 'plugins/hotel::hotel.hotels',
+                    'route' => 'hotel.index',
+                ])
+                ->registerItem([
+                    'id' => 'cms-plugins-room',
+                    'priority' => 1,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::room.name',
                     'route' => 'room.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-room-category',
-                    'priority' => 1,
+                    'priority' => 2,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::room-category.name',
                     'route' => 'room-category.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-amenities',
-                    'priority' => 2,
+                    'priority' => 3,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::amenity.name',
                     'icon' => null,
@@ -231,35 +238,35 @@ class HotelServiceProvider extends ServiceProvider
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-food',
-                    'priority' => 3,
+                    'priority' => 4,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::food.name',
                     'route' => 'food.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-food-type',
-                    'priority' => 4,
+                    'priority' => 5,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::food-type.name',
                     'route' => 'food-type.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-feature',
-                    'priority' => 5,
+                    'priority' => 6,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::feature.menu',
                     'route' => 'feature.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-service',
-                    'priority' => 6,
+                    'priority' => 7,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::service.name',
                     'route' => 'service.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-place',
-                    'priority' => 7,
+                    'priority' => 8,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::place.name',
                     'route' => 'place.index',
@@ -269,7 +276,7 @@ class HotelServiceProvider extends ServiceProvider
                     function (DashboardMenuSupport $menu) {
                         return $menu->registerItem([
                             'id' => 'cms-plugins-hotel-review',
-                            'priority' => 8,
+                            'priority' => 9,
                             'parent_id' => 'cms-plugins-hotel',
                             'name' => 'plugins/hotel::review.name',
                             'route' => 'review.index',
@@ -278,21 +285,21 @@ class HotelServiceProvider extends ServiceProvider
                 )
                 ->registerItem([
                     'id' => 'cms-plugins-customer',
-                    'priority' => 9,
+                    'priority' => 10,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::customer.name',
                     'route' => 'customer.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-tax',
-                    'priority' => 10,
+                    'priority' => 11,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::tax.name',
                     'route' => 'tax.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-hotel-coupons',
-                    'priority' => 11,
+                    'priority' => 12,
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::coupon.name',
                     'route' => 'coupons.index',

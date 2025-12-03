@@ -29,6 +29,7 @@ class Room extends BaseModel
         'max_children',
         'room_category_id',
         'tax_id',
+        'hotel_id',
         'order',
         'status',
     ];
@@ -70,6 +71,11 @@ class Room extends BaseModel
     public function category(): BelongsTo
     {
         return $this->belongsTo(RoomCategory::class, 'room_category_id')->withDefault();
+    }
+
+    public function hotel(): BelongsTo
+    {
+        return $this->belongsTo(Hotel::class, 'hotel_id')->withDefault();
     }
 
     public function isAvailableAt(array $filters = []): bool

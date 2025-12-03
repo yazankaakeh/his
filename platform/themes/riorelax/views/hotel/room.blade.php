@@ -47,6 +47,11 @@
                             <div class="col-12">
                                 <div class="price">
                                     <h2>{{ $room->name }}</h2>
+                                    @if($room->hotel_id && $room->hotel)
+                                        <p class="text-muted mb-2">
+                                            <i class="ti ti-building"></i> {{ $room->hotel->name }}
+                                        </p>
+                                    @endif
                                     @if ($nights > 1)
                                         <span>{{ __(':price for :nights nights', ['price' => format_price($room->getRoomTotalPrice($startDate, $endDate)), 'nights' => $nights]) }}</span>
                                     @else

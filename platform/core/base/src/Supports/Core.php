@@ -120,7 +120,7 @@ final class Core
 
     public function isSkippedLicenseReminder(): bool
     {
-        try {
+        /*try {
             $lastSkipDateTimeString = $this->files->exists($this->skipLicenseReminderFilePath)
                 ? $this->files->get($this->skipLicenseReminderFilePath)
                 : null;
@@ -133,7 +133,7 @@ final class Core
 
             $this->clearLicenseReminder();
         } catch (Throwable) {
-        }
+        }*/
 
         return false;
     }

@@ -2,6 +2,16 @@
 
 return [
     'name' => 'Hotel',
+    'hotels' => 'Hotels',
+    'create' => 'Create hotel',
+    'form' => [
+        'address' => 'Address',
+        'address_placeholder' => 'Enter hotel address',
+        'phone' => 'Phone',
+        'phone_placeholder' => 'Enter hotel phone',
+        'email' => 'Email',
+        'email_placeholder' => 'Enter hotel email',
+    ],
     'booking_name' => 'Booking name',
     'booking_email' => 'Booking email',
     'booking_phone' => 'Booking phone',

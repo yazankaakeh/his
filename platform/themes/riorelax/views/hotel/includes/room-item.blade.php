@@ -1,5 +1,8 @@
 @php
     $margin = $margin ?? false;
+    $startDate = $startDate ?? now();
+    $endDate = $endDate ?? now()->addDay();
+    $adults = $adults ?? 1;
 @endphp
 
 <div @class(['single-services shadow-block mb-30', 'ser-m' => !$margin])>
