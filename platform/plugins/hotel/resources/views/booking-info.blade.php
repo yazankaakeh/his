@@ -119,11 +119,22 @@
                                 >
                             </a>
                         </x-core::table.body.cell>
-                        <x-core::table.body.cell style="vertical-align: middle !important;"><a
+                        <x-core::table.body.cell style="vertical-align: middle !important;">
+                            <a
                                 class="booking-information-link"
                                 href="{{ $booking->room->room->url }}"
                                 target="_blank"
-                            >{{ $booking->room->room->name }}</a></x-core::table.body.cell>
+                            >{{ $booking->room->room->name }}</a>
+                            @if($booking->room->room->hotel_id && $booking->room->room->hotel)
+                                <br>
+                                <small>
+                                    <i class="ti ti-building"></i>
+                                    <span class="badge bg-info" style="font-size: 1.1em; font-weight: bold; padding: 0.5em 1em;">
+                                        {{ $booking->room->room->hotel->name }}
+                                    </span>
+                                </small>
+                            @endif
+                        </x-core::table.body.cell>
                     @else
                         <x-core::table.body.cell>
                             <img

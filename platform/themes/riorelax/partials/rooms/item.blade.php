@@ -33,8 +33,8 @@
         @endif
         <h4><a href="{{ $room->url }}">{{ $room->name }}</a></h4>
         @if($room->hotel_id && $room->hotel)
-            <p class="text-muted mb-2" style="font-size: 14px;">
-                <i class="ti ti-building"></i> {{ $room->hotel->name }}
+            <p class="text-muted mb-2" style="font-size: 18px;">
+              <b>  <i class="fal fa-hotel"></i> {{ $room->hotel->name }} </b>
             </p>
         @endif
         @if ($description = $room->description)

@@ -8,7 +8,9 @@ use Botble\Table\Abstracts\TableAbstract;
 use Botble\Table\Actions\DeleteAction;
 use Botble\Table\Actions\EditAction;
 use Botble\Table\BulkActions\DeleteBulkAction;
+use Botble\Base\Facades\Html;
 use Botble\Table\Columns\CreatedAtColumn;
+use Botble\Table\Columns\FormattedColumn;
 use Botble\Table\Columns\IdColumn;
 use Botble\Table\Columns\ImageColumn;
 use Botble\Table\Columns\NameColumn;
@@ -53,7 +55,18 @@ class HotelTable extends TableAbstract
         return [
             IdColumn::make(),
             ImageColumn::make(),
-            NameColumn::make()->route('hotel.edit'),
+            FormattedColumn::make('name')
+                ->title(trans('core/base::tables.name'))
+                ->alignLeft()
+                ->renderUsing(function (FormattedColumn $column) {
+                    $hotel = $column->getItem();
+                    $url = route('hotel.edit', $hotel->id);
+                    $badgeHtml = Html::tag('span', $hotel->name, [
+                        'class' => 'badge bg-info text-info-fg',
+                        'style' => 'font-size: 1.1em; font-weight: bold; padding: 0.5em 1em;'
+                    ]);
+                    return Html::link($url, $badgeHtml, [], null, false);
+                }),
             CreatedAtColumn::make(),
             StatusColumn::make(),
         ];

@@ -48,8 +48,11 @@
                                 <div class="price">
                                     <h2>{{ $room->name }}</h2>
                                     @if($room->hotel_id && $room->hotel)
-                                        <p class="text-muted mb-2">
-                                            <i class="ti ti-building"></i> {{ $room->hotel->name }}
+                                        <p class="mb-2">
+                                            <i class="ti ti-building"></i>
+                                            <span class="badge bg-success" style="font-size: 1.1em; font-weight: bold; padding: 0.5em 1em;">
+                                                {{ $room->hotel->name }}
+                                            </span>
                                         </p>
                                     @endif
                                     @if ($nights > 1)
