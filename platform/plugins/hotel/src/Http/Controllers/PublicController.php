@@ -359,6 +359,8 @@ class PublicController extends Controller
             ->with([
                 'currency',
                 'category',
+                'hotel',
+                'hotel.location',
                 'activeBookingRooms' => function ($query) use ($startDate, $endDate) {
                     return $query
                         ->whereNot('status', BookingStatusEnum::CANCELLED)

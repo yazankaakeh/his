@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Botble\Base\Supports\BaseSeeder;
 use Botble\Hotel\Models\Hotel;
+use Botble\Hotel\Models\Location;
 use Illuminate\Support\Facades\File;
 
 class HotelSeeder extends BaseSeeder
@@ -53,8 +54,17 @@ class HotelSeeder extends BaseSeeder
             ],
         ];
 
-        foreach ($hotels as $hotel) {
+        $locations = Location::query()->pluck('id')->all();
+
+        foreach ($hotels as $index => $hotel) {
             $hotel['content'] = File::get(database_path('seeders/contents/hotel-content.html'));
+
+            // Assign locations to hotels (cycling through)
+            if (!empty($locations)) {
+                $locationIndex = $index % count($locations);
+                $hotel['location_id'] = $locations[$locationIndex];
+            }
+
             Hotel::query()->create($hotel);
         }
     }

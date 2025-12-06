@@ -14,6 +14,18 @@
         $startDate = request()->query('start_date', Carbon\Carbon::now()->format(HotelHelper::getDateFormat()));
         $endDate = request()->query('end_date', Carbon\Carbon::now()->addDay()->format(HotelHelper::getDateFormat()));
         $adults = request()->query('adults', $minimumNumberOfGuests);
+
+        // Check room availability if this is a booking form for a specific room
+        $isRoomAvailable = true;
+        if ($availableForBooking && isset($room)) {
+            $isRoomAvailable = $room->isAvailableAt([
+                'start_date' => HotelHelper::dateFromRequest($startDate),
+                'end_date' => HotelHelper::dateFromRequest($endDate),
+                'adults' => request()->integer('adults', $minimumNumberOfGuests),
+                'children' => request()->integer('children', 0),
+                'rooms' => request()->integer('rooms', 1),
+            ]);
+        }
     @endphp
 
     <form action="{{ $availableForBooking ? route('public.booking') : route('public.rooms') }}" method="{{ $availableForBooking ? 'POST' : 'GET' }}" class="contact-form mt-30 form-booking">
@@ -103,9 +115,15 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div class="slider-btn">
-                            <button type="submit" class="btn ss-btn" data-animation="fadeInRight" data-delay=".8s">
-                                {{ $availableForBooking ? __('Book Now') : __('Check Availability') }}
-                            </button>
+                            @if ($availableForBooking && !$isRoomAvailable)
+                                <button type="button" class="btn ss-btn" disabled style="background-color: #dc3545; cursor: not-allowed; opacity: 0.7;">
+                                    {{ __('Room Unavailable') }}
+                                </button>
+                            @else
+                                <button type="submit" class="btn ss-btn" data-animation="fadeInRight" data-delay=".8s">
+                                    {{ $availableForBooking ? __('Book Now') : __('Check Availability') }}
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -185,9 +203,15 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="slider-btn mt-15">
-                            <button type="submit" class="btn ss-btn" data-animation="fadeInRight" data-delay=".8s">
-                                <span>{{ $availableForBooking ? __('Book Now') : __('Check Availability') }}</span>
-                            </button>
+                            @if ($availableForBooking && !$isRoomAvailable)
+                                <button type="button" class="btn ss-btn" disabled style="background-color: #dc3545; cursor: not-allowed; opacity: 0.7;">
+                                    <span>{{ __('Room Unavailable') }}</span>
+                                </button>
+                            @else
+                                <button type="submit" class="btn ss-btn" data-animation="fadeInRight" data-delay=".8s">
+                                    <span>{{ $availableForBooking ? __('Book Now') : __('Check Availability') }}</span>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>

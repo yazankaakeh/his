@@ -11,6 +11,7 @@ use Botble\Table\Actions\EditAction;
 use Botble\Table\BulkActions\DeleteBulkAction;
 use Botble\Table\Columns\Column;
 use Botble\Table\Columns\CreatedAtColumn;
+use Botble\Table\Columns\FormattedColumn;
 use Botble\Table\Columns\IdColumn;
 use Botble\Table\Columns\ImageColumn;
 use Botble\Table\Columns\NameColumn;
@@ -54,6 +55,7 @@ class RoomTable extends TableAbstract
                 'name',
                 'images',
                 'price',
+                'hotel_id',
                 'created_at',
                 'order',
                 'status',
@@ -68,6 +70,18 @@ class RoomTable extends TableAbstract
             IdColumn::make(),
             ImageColumn::make(),
             NameColumn::make()->route('room.edit'),
+            FormattedColumn::make('hotel_id')
+                ->title(trans('plugins/hotel::room.form.hotel'))
+                ->renderUsing(function (FormattedColumn $column) {
+                    $room = $column->getItem();
+                    return $room->hotel?->name ?: '--';
+                }),
+            FormattedColumn::make('hotel_id')
+                ->title(trans('plugins/hotel::hotel.form.location'))
+                ->renderUsing(function (FormattedColumn $column) {
+                    $room = $column->getItem();
+                    return $room->hotel?->location?->name ?: '--';
+                }),
             Column::formatted('price')
                 ->title(trans('plugins/hotel::room.form.price')),
             Column::make('order')

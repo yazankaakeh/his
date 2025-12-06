@@ -48,12 +48,14 @@
                                 <div class="price">
                                     <h2>{{ $room->name }}</h2>
                                     @if($room->hotel_id && $room->hotel)
-                                        <p class="mb-2">
-                                            <i class="ti ti-building"></i>
-                                            <span class="badge bg-success" style="font-size: 1.1em; font-weight: bold; padding: 0.5em 1em;">
-                                                {{ $room->hotel->name }}
-                                            </span>
+                                        <p class="text-muted mb-2" style="font-size: 18px;">
+                                            <b>  <i class="fal fa-hotel"></i> {{ $room->hotel->name }} </b>
                                         </p>
+                                        @if($room->hotel->location_id && $room->hotel->location)
+                                            <p class="text-muted mb-2" style="font-size: 16px;">
+                                                <i class="fal fa-map-marker-alt"></i> {{ $room->hotel->location->name }}
+                                            </p>
+                                        @endif
                                     @endif
                                     @if ($nights > 1)
                                         <span>{{ __(':price for :nights nights', ['price' => format_price($room->getRoomTotalPrice($startDate, $endDate)), 'nights' => $nights]) }}</span>

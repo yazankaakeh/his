@@ -261,10 +261,18 @@
 
                         <div class="room-information">
                             <span>{{ $room->name  }}</span>
+                            @if($room->hotel->location_id && $room->hotel->location)
+                                <div class="mt-2">
+                                    <i class="ti ti-building"></i>
+                                    <span class="badge bg-warning-lt" style="font-size: 1.1em; font-weight: bold; padding: 0.5em 1em;">
+                                       {{ $room->hotel->location->name }}
+                                    </span>
+                                </div>
+                            @endif
                             @if($room->hotel_id && $room->hotel)
                                 <div class="mt-2">
                                     <i class="ti ti-building"></i>
-                                    <span class="badge bg-info" style="font-size: 1.1em; font-weight: bold; padding: 0.5em 1em;">
+                                    <span class="badge bg-warning-lt" style="font-size: 1.1em; font-weight: bold; padding: 0.5em 1em;">
                                         {{ $room->hotel->name }}
                                     </span>
                                 </div>

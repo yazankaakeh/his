@@ -3,6 +3,7 @@
 namespace Botble\Hotel\Http\Controllers\Front\Customers;
 
 use Botble\Base\Http\Controllers\BaseController;
+use Botble\Hotel\Enums\BookingStatusEnum;
 use Botble\Hotel\Facades\InvoiceHelper;
 use Botble\Hotel\Models\Booking;
 use Botble\Hotel\Models\Invoice;
@@ -69,6 +70,28 @@ class BookingController extends BaseController
             compact('booking'),
             'plugins/hotel::themes.customers.bookings.detail'
         )->render();
+    }
+
+    public function cancel(int|string $id)
+    {
+        $booking = Booking::query()
+            ->where([
+                'id' => $id,
+                'customer_id' => auth('customer')->id(),
+            ])
+            ->firstOrFail();
+
+        if ($booking->status != BookingStatusEnum::PENDING) {
+            return redirect()
+                ->route('customer.bookings.show', $booking->transaction_id)
+                ->with('error', __('Only pending bookings can be cancelled.'));
+        }
+
+        $booking->update(['status' => BookingStatusEnum::CANCELLED]);
+
+        return redirect()
+            ->route('customer.bookings.show', $booking->transaction_id)
+            ->with('success', __('Your reservation has been cancelled successfully.'));
     }
 
     public function getGenerateInvoice(int|string $invoiceId, Request $request)

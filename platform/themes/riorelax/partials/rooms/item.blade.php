@@ -1,6 +1,39 @@
 @php
     $margin = $margin ?? false;
+
+    // Debug: Check if relationships are loaded
+    $startDateFormatted = is_string($startDate) ? $startDate : $startDate->format('Y-m-d');
+    $endDateFormatted = is_string($endDate) ? $endDate : $endDate->format('Y-m-d');
+
+    // Ensure relationships are loaded
+    if (!$room->relationLoaded('activeBookingRooms')) {
+        $room->load(['activeBookingRooms', 'activeRoomDates']);
+    }
+
+    $availabilityCondition = [
+        'start_date' => $startDateFormatted,
+        'end_date' => $endDateFormatted,
+        'adults' => $adults ?? HotelHelper::getMinimumNumberOfGuests(),
+        'children' => request()->integer('children', 0),
+        'rooms' => request()->integer('rooms', 1),
+    ];
+
+    $isAvailable = $room->isAvailableAt($availabilityCondition);
+
+    // Temporary debug output
+    $debugInfo = [
+        'room_id' => $room->id,
+        'room_name' => $room->name,
+        'start_date' => $startDateFormatted,
+        'end_date' => $endDateFormatted,
+        'is_available' => $isAvailable,
+        'has_bookings' => $room->activeBookingRooms->count(),
+        'number_of_rooms' => $room->number_of_rooms,
+    ];
 @endphp
+
+<!-- Debug Info (remove this later) -->
+<!-- @json($debugInfo) -->
 
 <div @class(['single-services shadow-block mb-30', 'ser-m' => !$margin])>
     <div class="services-thumb hover-zoomin wow fadeInUp animated">
@@ -15,18 +48,24 @@
             <div class="day-book">
                 <ul>
                     <li>
-                        <form action="{{ route('public.booking') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="room_id" value="{{ $room->id }}">
-                            <input type="hidden" name="start_date" value="{{ $startDate->format(HotelHelper::getDateFormat()) }}">
-                            <input type="hidden" name="end_date" value="{{ $endDate->format(HotelHelper::getDateFormat()) }}">
-                            <input type="hidden" name="adults" value="{{ $adults }}">
-                            <input name="children" type="hidden" value="{{ BaseHelper::stringify(request()->integer('children')) ?: 0 }}">
-                            <input name="rooms" type="hidden" value="{{ BaseHelper::stringify(request()->integer('rooms', 1)) }}">
-                            <button class="book-button-custom" type="submit" data-animation="fadeInRight" data-delay=".8s">
-                                {{ __('BOOK NOW FOR :price', ['price' => format_price($room->total_price)]) }}
+                        @if ($isAvailable)
+                            <form action="{{ route('public.booking') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="room_id" value="{{ $room->id }}">
+                                <input type="hidden" name="start_date" value="{{ $startDate->format(HotelHelper::getDateFormat()) }}">
+                                <input type="hidden" name="end_date" value="{{ $endDate->format(HotelHelper::getDateFormat()) }}">
+                                <input type="hidden" name="adults" value="{{ $adults }}">
+                                <input name="children" type="hidden" value="{{ BaseHelper::stringify(request()->integer('children')) ?: 0 }}">
+                                <input name="rooms" type="hidden" value="{{ BaseHelper::stringify(request()->integer('rooms', 1)) }}">
+                                <button class="book-button-custom" type="submit" data-animation="fadeInRight" data-delay=".8s">
+                                    {{ __('BOOK NOW FOR :price', ['price' => format_price($room->total_price)]) }}
+                                </button>
+                            </form>
+                        @else
+                            <button class="book-button-custom" disabled style="background-color: #dc3545; cursor: not-allowed; opacity: 0.7;">
+                                {{ __('ROOM UNAVAILABLE') }}
                             </button>
-                        </form>
+                        @endif
                     </li>
                 </ul>
             </div>
@@ -36,6 +75,11 @@
             <p class="text-muted mb-2" style="font-size: 18px;">
               <b>  <i class="fal fa-hotel"></i> {{ $room->hotel->name }} </b>
             </p>
+            @if($room->hotel->location_id && $room->hotel->location)
+                <p class="text-muted mb-2" style="font-size: 16px;">
+                  <i class="fal fa-map-marker-alt"></i> {{ $room->hotel->location->name }}
+                </p>
+            @endif
         @endif
         @if ($description = $room->description)
             <p class="room-item-custom-truncate" title="{{ $description }}">{!! BaseHelper::clean($description) !!}</p>

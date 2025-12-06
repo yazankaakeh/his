@@ -8,6 +8,7 @@ use Botble\Hotel\Models\Booking;
 use Botble\Hotel\Models\BookingAddress;
 use Botble\Hotel\Models\BookingRoom;
 use Botble\Hotel\Models\Hotel;
+use Botble\Hotel\Models\Location;
 use Botble\Hotel\Models\Room;
 use Botble\Hotel\Models\RoomCategory;
 use Botble\Slug\Facades\SlugHelper;

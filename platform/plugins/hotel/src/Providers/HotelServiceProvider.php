@@ -28,6 +28,7 @@ use Botble\Hotel\Models\Customer;
 use Botble\Hotel\Models\Feature;
 use Botble\Hotel\Models\Food;
 use Botble\Hotel\Models\FoodType;
+use Botble\Hotel\Models\Location;
 use Botble\Hotel\Models\Place;
 use Botble\Hotel\Models\Room;
 use Botble\Hotel\Models\RoomCategory;
@@ -44,6 +45,7 @@ use Botble\Hotel\Repositories\Eloquent\CustomerRepository;
 use Botble\Hotel\Repositories\Eloquent\FeatureRepository;
 use Botble\Hotel\Repositories\Eloquent\FoodRepository;
 use Botble\Hotel\Repositories\Eloquent\FoodTypeRepository;
+use Botble\Hotel\Repositories\Eloquent\LocationRepository;
 use Botble\Hotel\Repositories\Eloquent\PlaceRepository;
 use Botble\Hotel\Repositories\Eloquent\RoomCategoryRepository;
 use Botble\Hotel\Repositories\Eloquent\RoomDateRepository;
@@ -59,6 +61,7 @@ use Botble\Hotel\Repositories\Interfaces\CustomerInterface;
 use Botble\Hotel\Repositories\Interfaces\FeatureInterface;
 use Botble\Hotel\Repositories\Interfaces\FoodInterface;
 use Botble\Hotel\Repositories\Interfaces\FoodTypeInterface;
+use Botble\Hotel\Repositories\Interfaces\LocationInterface;
 use Botble\Hotel\Repositories\Interfaces\PlaceInterface;
 use Botble\Hotel\Repositories\Interfaces\RoomCategoryInterface;
 use Botble\Hotel\Repositories\Interfaces\RoomDateInterface;
@@ -170,6 +173,10 @@ class HotelServiceProvider extends ServiceProvider
         $this->app->bind(TaxInterface::class, function () {
             return new TaxRepository(new Tax());
         });
+
+        $this->app->bind(LocationInterface::class, function () {
+            return new LocationRepository(new Location());
+        });
     }
 
     public function boot(): void
@@ -213,6 +220,13 @@ class HotelServiceProvider extends ServiceProvider
                     'parent_id' => 'cms-plugins-hotel',
                     'name' => 'plugins/hotel::hotel.hotels',
                     'route' => 'hotel.index',
+                ])
+                ->registerItem([
+                    'id' => 'cms-plugins-locations',
+                    'priority' => 0.5,
+                    'parent_id' => 'cms-plugins-hotel',
+                    'name' => 'plugins/hotel::location.locations',
+                    'route' => 'location.index',
                 ])
                 ->registerItem([
                     'id' => 'cms-plugins-room',

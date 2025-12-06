@@ -20,6 +20,7 @@ class DatabaseSeeder extends BaseSeeder
             FoodTypeSeeder::class,
             RoomCategorySeeder::class,
             HotelSeeder::class,
+            LocationSeeder::class,
             RoomSeeder::class,
             FoodTypeSeeder::class,
             FoodSeeder::class,

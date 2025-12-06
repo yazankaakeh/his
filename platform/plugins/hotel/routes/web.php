@@ -138,6 +138,10 @@ Route::group(['namespace' => 'Botble\Hotel\Http\Controllers', 'middleware' => ['
             Route::resource('', 'HotelController')->parameters(['' => 'hotel']);
         });
 
+        Route::group(['prefix' => 'locations', 'as' => 'location.'], function () {
+            Route::resource('', 'LocationController')->parameters(['' => 'location']);
+        });
+
         Route::group(['prefix' => 'taxes', 'as' => 'tax.'], function () {
             Route::resource('', 'TaxController')->parameters(['' => 'tax']);
         });
@@ -302,6 +306,11 @@ if (defined('THEME_MODULE_SCREEN_NAME')) {
             Route::get('bookings/{id}', [
                 'as' => 'bookings.show',
                 'uses' => 'BookingController@show',
+            ]);
+
+            Route::get('bookings/{id}/cancel', [
+                'as' => 'bookings.cancel',
+                'uses' => 'BookingController@cancel',
             ]);
 
             Route::get('generate-invoice/{id}', [

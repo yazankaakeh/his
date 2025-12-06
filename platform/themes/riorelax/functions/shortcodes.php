@@ -180,6 +180,8 @@ app()->booted(function () {
                         'amenities',
                         'amenities.metadata',
                         'slugable',
+                        'hotel',
+                        'hotel.location',
                         'activeBookingRooms' => function ($query) use ($startDate, $endDate) {
                             return $query
                                 ->where(function ($query) use ($startDate, $endDate) {
@@ -227,11 +229,9 @@ app()->booted(function () {
                 ];
 
                 foreach ($queriedRooms as &$room) {
-                    if ($room->isAvailableAt($condition)) {
-                        $room->total_price = $room->getRoomTotalPrice($startDate, $endDate, $condition['rooms']);
-
-                        $rooms[] = $room;
-                    }
+                    // Calculate price for all rooms, availability will be checked in the view
+                    $room->total_price = $room->getRoomTotalPrice($startDate, $endDate, $condition['rooms']);
+                    $rooms[] = $room;
                 }
 
                 return Theme::partial(
@@ -380,27 +380,33 @@ app()->booted(function () {
                     'amenities',
                     'amenities.metadata',
                     'slugable',
+                    'hotel',
+                    'hotel.location',
                     'activeBookingRooms' => function ($query) use ($startDate, $endDate) {
                         return $query
+                            ->whereNot('status', \Botble\Hotel\Enums\BookingStatusEnum::CANCELLED)
                             ->where(function ($query) use ($startDate, $endDate) {
                                 return $query
-                                    ->whereDate('start_date', '>=', $startDate)
-                                    ->whereDate('start_date', '<=', $endDate);
-                            })
-                            ->orWhere(function ($query) use ($startDate, $endDate) {
-                                return $query
-                                    ->whereDate('end_date', '>=', $startDate)
-                                    ->whereDate('end_date', '<=', $endDate);
-                            })
-                            ->orWhere(function ($query) use ($startDate, $endDate) {
-                                return $query
-                                    ->whereDate('start_date', '<=', $startDate)
-                                    ->whereDate('end_date', '>=', $endDate);
-                            })
-                            ->orWhere(function ($query) use ($startDate, $endDate) {
-                                return $query
-                                    ->whereDate('start_date', '>=', $startDate)
-                                    ->whereDate('end_date', '<=', $endDate);
+                                    ->where(function ($query) use ($startDate, $endDate) {
+                                        return $query
+                                            ->whereDate('start_date', '>=', $startDate)
+                                            ->whereDate('start_date', '<=', $endDate);
+                                    })
+                                    ->orWhere(function ($query) use ($startDate, $endDate) {
+                                        return $query
+                                            ->whereDate('end_date', '>=', $startDate)
+                                            ->whereDate('end_date', '<=', $endDate);
+                                    })
+                                    ->orWhere(function ($query) use ($startDate, $endDate) {
+                                        return $query
+                                            ->whereDate('start_date', '<=', $startDate)
+                                            ->whereDate('end_date', '>=', $endDate);
+                                    })
+                                    ->orWhere(function ($query) use ($startDate, $endDate) {
+                                        return $query
+                                            ->whereDate('start_date', '>=', $startDate)
+                                            ->whereDate('end_date', '<=', $endDate);
+                                    });
                             });
                     },
                     'activeRoomDates' => function ($query) use ($startDate, $endDate) {
@@ -425,11 +431,9 @@ app()->booted(function () {
             ];
 
             foreach ($queriedRooms as &$room) {
-                if ($room->isAvailableAt($condition)) {
-                    $room->total_price = $room->getRoomTotalPrice($startDate, $endDate);
-
-                    $rooms[] = $room;
-                }
+                // Calculate price for all rooms, availability will be checked in the view
+                $room->total_price = $room->getRoomTotalPrice($startDate, $endDate);
+                $rooms[] = $room;
             }
 
             $rooms = new LengthAwarePaginator(

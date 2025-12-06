@@ -11,6 +11,8 @@ return [
         'phone_placeholder' => 'Enter hotel phone',
         'email' => 'Email',
         'email_placeholder' => 'Enter hotel email',
+        'location' => 'Region',
+        'select_location' => '-- Select Region --',
     ],
     'booking_name' => 'Booking name',
     'booking_email' => 'Booking email',

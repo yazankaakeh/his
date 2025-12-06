@@ -14,11 +14,14 @@ use Botble\Base\Forms\Fields\TextField;
 use Botble\Base\Forms\FormAbstract;
 use Botble\Hotel\Http\Requests\HotelRequest;
 use Botble\Hotel\Models\Hotel;
+use Botble\Hotel\Models\Location;
 
 class HotelForm extends FormAbstract
 {
     public function setup(): void
     {
+        $locations = Location::query()->pluck('name', 'id')->all();
+
         $this
             ->setupModel(new Hotel())
             ->setValidatorClass(HotelRequest::class)
@@ -45,6 +48,13 @@ class HotelForm extends FormAbstract
                 'attr' => [
                     'placeholder' => trans('plugins/hotel::hotel.form.email_placeholder'),
                 ],
+            ])
+            ->add('location_id', 'customSelect', [
+                'label' => trans('plugins/hotel::hotel.form.location'),
+                'attr' => [
+                    'class' => 'form-control select-full',
+                ],
+                'choices' => ['' => trans('plugins/hotel::hotel.form.select_location')] + $locations,
             ])
             ->add('status', SelectField::class, StatusFieldOption::make()->toArray())
             ->add('image', MediaImageField::class)

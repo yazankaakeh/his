@@ -42,6 +42,24 @@
             @endif
         </x-core::datagrid.item>
 
+        @if ($booking->room->room->exists && ($room = $booking->room->room))
+            @if($room->hotel_id && $room->hotel)
+                <x-core::datagrid.item :title="__('Hotel')">
+                    <span class="btn btn-warning-lt" style="font-size: 1em; font-weight: bold; padding: 0.5em 1em;">
+                        {{ $room->hotel->name }}
+                    </span>
+                </x-core::datagrid.item>
+
+                @if($room->hotel->location_id && $room->hotel->location)
+                    <x-core::datagrid.item :title="__('Region')">
+                        <span class="btn btn-warning-lt" style="font-size: 1em; font-weight: bold; padding: 0.5em 1em;">
+                            {{ $room->hotel->location->name }}
+                        </span>
+                    </x-core::datagrid.item>
+                @endif
+            @endif
+        @endif
+
         <x-core::datagrid.item :title="__('Start Date')">
             {{ $booking->room->start_date }}
         </x-core::datagrid.item>
@@ -128,11 +146,18 @@
                             @if($booking->room->room->hotel_id && $booking->room->room->hotel)
                                 <br>
                                 <small>
-                                    <i class="ti ti-building"></i>
-                                    <span class="badge bg-info" style="font-size: 1.1em; font-weight: bold; padding: 0.5em 1em;">
+                                    <span class="booking-information-link">
                                         {{ $booking->room->room->hotel->name }}
                                     </span>
                                 </small>
+                                @if($booking->room->room->hotel->location_id && $booking->room->room->hotel->location)
+                                    <br>
+                                    <small>
+                                        <span class="booking-information-link">
+                                            {{ $booking->room->room->hotel->location->name }}
+                                        </span>
+                                    </small>
+                                @endif
                             @endif
                         </x-core::table.body.cell>
                     @else
@@ -278,6 +303,19 @@
             >
                 {{ __('Download Invoice') }}
             </x-core::button>
+
+            @if ($booking->status == \Botble\Hotel\Enums\BookingStatusEnum::PENDING)
+                <x-core::button
+                    tag="a"
+                    :href="route('customer.bookings.cancel', $booking->id)"
+                    icon="ti ti-x"
+                    color="danger"
+                    :class="$buttonClass ?? ''"
+                    onclick="return confirm('{{ __('Are you sure you want to cancel this reservation?') }}')"
+                >
+                    {{ __('Cancel Reservation') }}
+                </x-core::button>
+            @endif
         </div>
     @endif
 @endif
