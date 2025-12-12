@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(php artisan optimize:clear:*)",
+      "Bash(php artisan route:list:*)"
     ],
     "deny": [],
     "ask": []

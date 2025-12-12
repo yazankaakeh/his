@@ -11,6 +11,7 @@ use Botble\Payment\Enums\PaymentStatusEnum;
 use Botble\Table\Abstracts\TableAbstract;
 use Botble\Table\Actions\DeleteAction;
 use Botble\Table\Actions\EditAction;
+use Botble\Table\HeaderActions\CreateHeaderAction;
 use Botble\Table\BulkActions\DeleteBulkAction;
 use Botble\Table\Columns\Column;
 use Botble\Table\Columns\CreatedAtColumn;
@@ -31,6 +32,7 @@ class BookingTable extends TableAbstract
     {
         $this
             ->model(Booking::class)
+            ->addHeaderAction(CreateHeaderAction::make()->route('booking.create'))
             ->addActions([
                 EditAction::make()->route('booking.edit'),
                 DeleteAction::make()->route('booking.destroy'),

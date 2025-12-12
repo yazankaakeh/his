@@ -84,7 +84,7 @@ Route::group(['namespace' => 'Botble\Hotel\Http\Controllers', 'middleware' => ['
         });
 
         Route::group(['prefix' => 'bookings', 'as' => 'booking.'], function () {
-            Route::resource('', 'BookingController')->parameters(['' => 'booking'])->except(['create', 'store']);
+            Route::resource('', 'BookingController')->parameters(['' => 'booking']);
         });
 
         Route::get('/booking-reports', [
