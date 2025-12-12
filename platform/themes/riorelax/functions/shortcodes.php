@@ -19,6 +19,8 @@ use Botble\Faq\Models\Faq;
 use Botble\Faq\Models\FaqCategory;
 use Botble\Hotel\Facades\HotelHelper;
 use Botble\Hotel\Models\Amenity;
+use Botble\Hotel\Models\Hotel;
+use Botble\Hotel\Models\Location;
 use Botble\Hotel\Models\Place;
 use Botble\Hotel\Models\Room;
 use Botble\Hotel\Models\Service;
@@ -184,25 +186,29 @@ app()->booted(function () {
                         'hotel.location',
                         'activeBookingRooms' => function ($query) use ($startDate, $endDate) {
                             return $query
+                                ->whereNot('status', \Botble\Hotel\Enums\BookingStatusEnum::CANCELLED)
                                 ->where(function ($query) use ($startDate, $endDate) {
                                     return $query
-                                        ->whereDate('start_date', '>=', $startDate)
-                                        ->whereDate('start_date', '<=', $endDate);
-                                })
-                                ->orWhere(function ($query) use ($startDate, $endDate) {
-                                    return $query
-                                        ->whereDate('end_date', '>=', $startDate)
-                                        ->whereDate('end_date', '<=', $endDate);
-                                })
-                                ->orWhere(function ($query) use ($startDate, $endDate) {
-                                    return $query
-                                        ->whereDate('start_date', '<=', $startDate)
-                                        ->whereDate('end_date', '>=', $endDate);
-                                })
-                                ->orWhere(function ($query) use ($startDate, $endDate) {
-                                    return $query
-                                        ->whereDate('start_date', '>=', $startDate)
-                                        ->whereDate('end_date', '<=', $endDate);
+                                        ->where(function ($query) use ($startDate, $endDate) {
+                                            return $query
+                                                ->whereDate('start_date', '>=', $startDate)
+                                                ->whereDate('start_date', '<=', $endDate);
+                                        })
+                                        ->orWhere(function ($query) use ($startDate, $endDate) {
+                                            return $query
+                                                ->whereDate('end_date', '>=', $startDate)
+                                                ->whereDate('end_date', '<=', $endDate);
+                                        })
+                                        ->orWhere(function ($query) use ($startDate, $endDate) {
+                                            return $query
+                                                ->whereDate('start_date', '<=', $startDate)
+                                                ->whereDate('end_date', '>=', $endDate);
+                                        })
+                                        ->orWhere(function ($query) use ($startDate, $endDate) {
+                                            return $query
+                                                ->whereDate('start_date', '>=', $startDate)
+                                                ->whereDate('end_date', '<=', $endDate);
+                                        });
                                 });
                         },
                         'activeRoomDates' => function ($query) use ($startDate, $endDate) {
@@ -369,6 +375,8 @@ app()->booted(function () {
 
             $filters = [
                 'keyword' => $request->query('q'),
+                'hotel_id' => $request->query('hotel_id'),
+                'location_id' => $request->query('location_id'),
             ];
 
             $params = [
@@ -444,9 +452,12 @@ app()->booted(function () {
                 ['path' => Paginator::resolveCurrentPath()]
             );
 
+            $locations = Location::query()->wherePublished()->pluck('name', 'id');
+            $hotels = Hotel::query()->wherePublished()->pluck('name', 'id');
+
             return Theme::partial(
                 'shortcodes.all-rooms.index',
-                compact('rooms', 'startDate', 'endDate', 'nights', 'adults')
+                compact('rooms', 'startDate', 'endDate', 'nights', 'adults', 'locations', 'hotels')
             );
         });
 

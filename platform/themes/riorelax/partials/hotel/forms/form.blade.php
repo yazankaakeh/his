@@ -11,20 +11,46 @@
     @php
         $minimumNumberOfGuests = HotelHelper::getMinimumNumberOfGuests();
         $maximumNumberOfGuests = HotelHelper::getMaximumNumberOfGuests();
-        $startDate = request()->query('start_date', Carbon\Carbon::now()->format(HotelHelper::getDateFormat()));
-        $endDate = request()->query('end_date', Carbon\Carbon::now()->addDay()->format(HotelHelper::getDateFormat()));
-        $adults = request()->query('adults', $minimumNumberOfGuests);
+
+        // Use passed dates if available, otherwise get from request
+        if (!isset($startDate)) {
+            $startDate = request()->query('start_date', Carbon\Carbon::now()->format(HotelHelper::getDateFormat()));
+        }
+        if (!isset($endDate)) {
+            $endDate = request()->query('end_date', Carbon\Carbon::now()->addDay()->format(HotelHelper::getDateFormat()));
+        }
+        if (!isset($adults)) {
+            $adults = request()->query('adults', $minimumNumberOfGuests);
+        }
 
         // Check room availability if this is a booking form for a specific room
         $isRoomAvailable = true;
         if ($availableForBooking && isset($room)) {
-            $isRoomAvailable = $room->isAvailableAt([
-                'start_date' => HotelHelper::dateFromRequest($startDate),
-                'end_date' => HotelHelper::dateFromRequest($endDate),
-                'adults' => request()->integer('adults', $minimumNumberOfGuests),
-                'children' => request()->integer('children', 0),
-                'rooms' => request()->integer('rooms', 1),
-            ]);
+            try {
+                // Convert dates to Carbon instances if they're strings
+                if (is_string($startDate)) {
+                    $checkStartDate = HotelHelper::dateFromRequest($startDate);
+                } else {
+                    $checkStartDate = $startDate;
+                }
+
+                if (is_string($endDate)) {
+                    $checkEndDate = HotelHelper::dateFromRequest($endDate);
+                } else {
+                    $checkEndDate = $endDate;
+                }
+
+                $isRoomAvailable = $room->isAvailableAt([
+                    'start_date' => $checkStartDate->format('Y-m-d'),
+                    'end_date' => $checkEndDate->format('Y-m-d'),
+                    'adults' => is_int($adults) ? $adults : request()->integer('adults', $minimumNumberOfGuests),
+                    'children' => request()->integer('children', 0),
+                    'rooms' => request()->integer('rooms', 1),
+                ]);
+            } catch (\Exception $e) {
+                // If date parsing fails, assume room is available
+                $isRoomAvailable = true;
+            }
         }
     @endphp
 

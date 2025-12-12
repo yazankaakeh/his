@@ -16,7 +16,7 @@
                                 <h2 class="widget-title"> {{ __('Booking form') }} </h2>
                                 <div class="booking">
                                     <div class="contact-bg">
-                                        {!! Theme::partial('hotel.forms.form', ['availableForBooking' => true, 'style' => 1, 'room' => $room]) !!}
+                                        {!! Theme::partial('hotel.forms.form', ['availableForBooking' => true, 'style' => 1, 'room' => $room, 'startDate' => $startDate, 'endDate' => $endDate, 'adults' => $adults]) !!}
                                     </div>
                                 </div>
                             </div>

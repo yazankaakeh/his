@@ -1,39 +1,24 @@
 @php
     $margin = $margin ?? false;
 
-    // Debug: Check if relationships are loaded
-    $startDateFormatted = is_string($startDate) ? $startDate : $startDate->format('Y-m-d');
-    $endDateFormatted = is_string($endDate) ? $endDate : $endDate->format('Y-m-d');
+    // Check if dates are available, otherwise default to showing as available
+    $isAvailable = true;
 
-    // Ensure relationships are loaded
-    if (!$room->relationLoaded('activeBookingRooms')) {
-        $room->load(['activeBookingRooms', 'activeRoomDates']);
+    if (isset($startDate) && isset($endDate)) {
+        $startDateFormatted = is_string($startDate) ? $startDate : $startDate->format('Y-m-d');
+        $endDateFormatted = is_string($endDate) ? $endDate : $endDate->format('Y-m-d');
+
+        $availabilityCondition = [
+            'start_date' => $startDateFormatted,
+            'end_date' => $endDateFormatted,
+            'adults' => $adults ?? HotelHelper::getMinimumNumberOfGuests(),
+            'children' => request()->integer('children', 0),
+            'rooms' => request()->integer('rooms', 1),
+        ];
+
+        $isAvailable = $room->isAvailableAt($availabilityCondition);
     }
-
-    $availabilityCondition = [
-        'start_date' => $startDateFormatted,
-        'end_date' => $endDateFormatted,
-        'adults' => $adults ?? HotelHelper::getMinimumNumberOfGuests(),
-        'children' => request()->integer('children', 0),
-        'rooms' => request()->integer('rooms', 1),
-    ];
-
-    $isAvailable = $room->isAvailableAt($availabilityCondition);
-
-    // Temporary debug output
-    $debugInfo = [
-        'room_id' => $room->id,
-        'room_name' => $room->name,
-        'start_date' => $startDateFormatted,
-        'end_date' => $endDateFormatted,
-        'is_available' => $isAvailable,
-        'has_bookings' => $room->activeBookingRooms->count(),
-        'number_of_rooms' => $room->number_of_rooms,
-    ];
 @endphp
-
-<!-- Debug Info (remove this later) -->
-<!-- @json($debugInfo) -->
 
 <div @class(['single-services shadow-block mb-30', 'ser-m' => !$margin])>
     <div class="services-thumb hover-zoomin wow fadeInUp animated">

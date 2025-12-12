@@ -13,6 +13,8 @@ class RoomRepository extends RepositoriesAbstract implements RoomInterface
         $filters = array_merge([
             'keyword' => null,
             'room_category_id' => null,
+            'hotel_id' => null,
+            'location_id' => null,
         ], $filters);
 
         $filters = HotelHelper::getRoomFilters($filters);
@@ -43,6 +45,16 @@ class RoomRepository extends RepositoriesAbstract implements RoomInterface
 
         if ($filters['room_category_id'] !== null) {
             $this->model = $this->model->where('room_category_id', $filters['room_category_id']);
+        }
+
+        if ($filters['hotel_id'] !== null) {
+            $this->model = $this->model->where('hotel_id', $filters['hotel_id']);
+        }
+
+        if ($filters['location_id'] !== null) {
+            $this->model = $this->model->whereHas('hotel', function ($query) use ($filters) {
+                $query->where('location_id', $filters['location_id']);
+            });
         }
 
         $this->model->wherePublished();

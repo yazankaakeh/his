@@ -92,6 +92,8 @@ class HotelSupport
             'page' => Arr::get($request, 'page', 1),
             'per_page' => Arr::get($request, 'per_page', 10),
             'room_category_id' => Arr::get($request, 'room_category_id'),
+            'hotel_id' => Arr::get($request, 'hotel_id'),
+            'location_id' => Arr::get($request, 'location_id'),
         ];
 
         $dateFormat = HotelHelper::getDateFormat();
@@ -114,6 +116,8 @@ class HotelSupport
                 'start_date' => ['nullable', 'string', 'date', 'date_format:' . $dateFormat, 'after_or_equal:today'],
                 'end_date' => ['nullable', 'string', 'date', 'date_format:' . $dateFormat, 'after_or_equal:start_date'],
                 'room_id' => ['nullable', 'integer', 'exists:hotel_rooms,id'],
+                'hotel_id' => ['nullable', 'int', 'exists:ht_hotels,id'],
+                'location_id' => ['nullable', 'int', 'exists:ht_locations,id'],
             ]);
 
             return $validator->valid();
