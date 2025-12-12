@@ -4,5 +4,10 @@
     "type": "package",
     "require": {
         "khaled.alshamaa/ar-php": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Botble\\Hotel\\": "src/"
+        }
     }
 }

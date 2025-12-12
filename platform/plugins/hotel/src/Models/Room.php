@@ -5,6 +5,7 @@ namespace Botble\Hotel\Models;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Models\BaseModel;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,6 +13,8 @@ use Illuminate\Support\Arr;
 
 class Room extends BaseModel
 {
+    use HasFactory;
+
     protected $table = 'ht_rooms';
 
     protected $fillable = [
