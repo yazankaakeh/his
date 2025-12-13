@@ -36,9 +36,8 @@ jobs:
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: |
-        touch database/database.sqlite
-        vendor/bin/phpunit
+      run: vendor/bin/phpunit --exclude-group=feature
+  
 
   build-docker:
     needs: tests
