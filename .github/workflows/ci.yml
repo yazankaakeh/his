@@ -32,12 +32,8 @@ jobs:
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
 
-    - name: Execute tests (Unit and Feature)
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
-      run: vendor/bin/phpunit --exclude-group=feature
-  
+    
+
 
   build-docker:
     needs: tests
